@@ -1,6 +1,10 @@
 <?php
 namespace Core;
 
+/*
+ * TODO : Flashbag and redirect
+ */
+
 class Application implements \ArrayAccess
 {
     /** @var Router */
