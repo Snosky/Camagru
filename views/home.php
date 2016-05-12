@@ -1,0 +1,11 @@
+<?php $app['view']->extend('layout.php'); ?>
+
+<?php $app['view']->block_start('title') ?>My title<?php $app['view']->block_end(); ?>
+
+<?php $app['view']->block_start('content') ?>
+Salut <?= $user->getUsername(); ?><br>
+
+<?php foreach ($users as $user): ?>
+    <?= $user->getUsername();?> <br>
+<?php endforeach; ?>
+<?php $app['view']->block_end(); ?>
