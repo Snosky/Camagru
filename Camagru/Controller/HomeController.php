@@ -9,11 +9,8 @@ class HomeController
     public function indexAction(Application $app)
     {
         /*$user = new User();
-        $user->setUsername('Test Insert');
+        $user->setUsername('Snosky');
         $app['dao.user']->save($user);*/
-
-
-        $app['dao.user']->delete(2);
 
         $user = $app['dao.user']->find(1);
         $users = $app['dao.user']->findAll();

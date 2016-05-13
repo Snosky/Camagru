@@ -8,13 +8,19 @@
      src: url('../fonts/Quicksand-Bold.otf');
      font-weight: bold;
 }
-/* END FONT FACE
+/* END FONT FACE */
 
 /* GLOBAL */
 body { background: url('../img/site42-bg.gif') repeat center top; }
 
 .wrapper { width: 960px; margin: 0 auto; }
     .wrapper:after { content: ' '; display: table; clear: both; }
+
+    .flash { padding: 10px; border: 1px solid; border-radius: 5px; margin: 5px auto; font-family: Arial, sans-serif; font-size: 0.9em; }
+        .flash p { margin: 4px 0;}
+        .flash-error { background: rgba(255, 74, 75, 0.5); border-color: rgba(220, 56, 57, 0.6); }
+        .flash-success { background: rgba(74, 255, 75, 0.5); border-color: rgba(56, 220, 57, 0.6); }
+        .flash-info { background: rgba(74, 75, 255, 0.5); border-color: rgba(56, 57, 220, 0.6);  }
 /* End GLOBAL */
 
 /* NAV */

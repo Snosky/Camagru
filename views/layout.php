@@ -22,6 +22,22 @@
         </div>
     </header>
 
+    <?php if ($app['flashbag']->have('success')): ?>
+    <div class="wrapper flash flash-success">
+        <?php foreach ($app['flashbag']->get('success') as $msg): ?>
+            <p><?= $msg; ?></p>
+        <?php endforeach ?>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($app['flashbag']->have('error')): ?>
+    <div class="wrapper flash flash-error">
+        <?php foreach ($app['flashbag']->get('error') as $msg): ?>
+            <p><?= $msg; ?></p>
+        <?php endforeach ?>
+    </div>
+    <?php endif; ?>
+
     <div class="wrapper content">
         <?php $app['view']->block_output('content') ?>
     </div>

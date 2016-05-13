@@ -15,6 +15,27 @@ class UserDAO extends DAO
         return NULL;
     }
 
+    public function findByUsername($username)
+    {
+        $sql = 'SELECT * FROM t_user WHERE usr_username=?';
+        $row = $this->getDb()->fetchAssoc($sql, array($username));
+
+        if ($row)
+            return $this->buildDomainObject($row);
+        return NULL;
+    }
+
+    public function findByEmail($email)
+    {
+        $sql = 'SELECT * FROM t_user WHERE usr_email=?';
+        $row = $this->getDb()->fetchAssoc($sql, array($email));
+
+        if ($row)
+            return $this->buildDomainObject($row);
+        return NULL;
+    }
+
+
     public function findAll()
     {
         $sql = 'SELECT * FROM t_user';

@@ -39,6 +39,35 @@ class Application implements \ArrayAccess
         }
     }
 
+    /**
+     * Redirect user
+     * @param $url
+     */
+    public function redirect($url)
+    {
+        header('Location:'.$url);
+        die();
+        return NULL;
+    }
+
+    /**
+     * Redirect user to same host last page or to home
+     */
+    public function redirectToLast()
+    {
+        $ref = $_SERVER['HTTP_REFERER'];
+        if (strstr($ref, $_SERVER['HTTP_HOST']))
+            $this->redirect($ref);
+        else
+            $this->redirect($this->url('home'));
+    }
+
+    public function hash($password, $salt)
+    {
+        $password .= $salt;
+        return hash('whirlpool', $password);
+    }
+
     /*
      * Route methods
      */

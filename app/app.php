@@ -14,6 +14,8 @@ catch (PDOException $e) {
 $app['db'] = new \Core\MyPDO($DB_DSN, $DB_USER, $DB_PASSWORD);
 /* End DB */
 
+$app['flashbag'] = new \Core\Flashbag();
+
 /* DAO */
 $app['dao.user'] = new \Camagru\DAO\UserDAO($app['db']);
 

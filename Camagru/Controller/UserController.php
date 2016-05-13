@@ -16,13 +16,18 @@ class UserController
 
             if (!isset($_POST['username']) || empty($_POST['username']) || !isset($_POST['password']) || empty($_POST['password']))
                 $form_is_valid = FALSE;
-            else if (!$app['dao.user']->findByUsername($_POST['username']) || !$app['dao.user']->findByEmail($_POST['username']))
+            else if (filter_var($_POST['username'], FILTER_VALIDATE_EMAIL) && !($user = $app['dao.user']->findByEmail($_POST['email'])))
+                $form_is_valid = FALSE;
+            else if (!($user = $app['dao.user']->findByUsername($_POST['username'])))
+                $form_is_valid = FALSE;
+            else if ($app->hash($_POST['password'], $user->getSalt()) != $user->getPassword())
                 $form_is_valid = FALSE;
 
             if ($form_is_valid)
             {
+                $app['user'] = $user;
                 $app['flashbag']->add('success', 'You\'re now connected.');
-                return $app->redirectToLast();
+                return $app->redirect($app->url('home'));
             }
             else
             {
@@ -43,30 +48,42 @@ class UserController
         {
             $form_is_valid = TRUE;
 
-            /* TODO : Plus de verification (longueur, caractere interdit) */
-            if (!isset($_POST['username']) || empty($_POST['username']))
+            $user->setUsername($_POST['username']);
+            $user->setEmail($_POST['email']);
+
+            /* Verification Username */
+            if (!isset($_POST['username']) || empty($_POST['username']) || !preg_match('/^[a-z0-9\ _-]{3,32}$/i', $_POST['username']))
             {
                 $form_is_valid = FALSE;
-                $app['flashbag']->add('error', 'Username');
+                $app['flashbag']->add('error', 'Username is not valid. 3 to 32 char. Alpha-numerics, spaces, underscores and - allowed');
             }
-
-            if (!isset($_POST['email']) || empty($_POST['email']))
+            else if ($app['dao.user']->findByUsername($_POST['username']))
             {
                 $form_is_valid = FALSE;
-                $app['flashbag']->add('error', 'email');
+                $app['flashbag']->add('error', 'Username is already taken');
             }
 
+            /* Verification email */
+            if (!isset($_POST['email']) || empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
+            {
+                $form_is_valid = FALSE;
+                $app['flashbag']->add('error', 'Email is not valid.');
+            }
+            else if ($app['dao.user']->findByEmail($_POST['email']))
+            {
+                $form_is_valid = FALSE;
+                $app['flashbag']->add('error', 'Email is already taken');
+            }
+
+            /* Verification password */
             if (!isset($_POST['password']) || empty($_POST['password']) || $_POST['password'] != $_POST['password2'])
             {
                 $form_is_valid = FALSE;
-                $app['flashbag']->add('error', 'password');
+                $app['flashbag']->add('error', 'Passwords do not match.');
             }
 
             if ($form_is_valid)
             {
-                $user->setUsername($_POST['username']);
-                $user->setEmail($_POST['email']);
-
                 $salt = substr(sha1(time()), 3, 32);
                 $password = $app->hash($_POST['password'], $salt);
 

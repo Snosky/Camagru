@@ -12,7 +12,7 @@
         <input type="password" name="password" id="password" required="required">
     </div>
     <div class="form-group">
-        <button class="btn">
+        <button class="btn" type="submit">
             Connexion
         </button>
     </div>
@@ -21,11 +21,11 @@
 <form action="<?= $app->url('register') ?>" method="post">
     <div class="form-group">
         <label for="username">Username :</label>
-        <input type="text" name="username" id="username" value="" required="required">
+        <input type="text" name="username" id="username" value="<?= $user->getUsername() ?>" required="required">
     </div>
     <div class="form-group">
         <label for="email">E-mail :</label>
-        <input type="email" name="email" id="email" value="" required="required">
+        <input type="email" name="email" id="email" value="<?= $user->getEmail() ?>" required="required">
     </div>
     <div class="form-group">
         <label for="password">Password :</label>
@@ -36,7 +36,7 @@
         <input type="password" name="password2" id="password2" required="required">
     </div>
     <div class="form-group">
-        <button class="btn">
+        <button class="btn" type="submit">
             Register
         </button>
     </div>

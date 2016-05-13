@@ -125,6 +125,8 @@ class MyPDO
     
     public function delete($table, $where = array())
     {
+        $this->bind_index = 0;
+
         $sql = "DELETE FROM $table WHERE";
         
         $first = TRUE;
@@ -136,11 +138,10 @@ class MyPDO
                 $sql .= " AND";
             $sql .= " $k=?";
         }
-        
+
         $req = $this->pdo->prepare($sql);
         $this->bindValues($req, $where);
         return $req->execute();
-            
     }
 
     private function bindValues(\PDOStatement $req, $values)
