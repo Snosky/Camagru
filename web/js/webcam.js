@@ -37,11 +37,10 @@ window.addEventListener("DOMContentLoaded", function() {
 
         for (var i = 0; i < images.length; i++)
         {
+        console.log(images[i].style)
             var img = new Image(images[i].clientWidth, images[i].clientHeight);
             img.src = images[i].currentSrc;
-            console.log(img);
-            //img.width =
-            context.drawImage(images[i], 0, 0, images[i].clientWidth, images[i].clientHeight);
+            context.drawImage(images[i], images[i].style.left, images[i].clientWidth, images[i].clientHeight);
         }
     });
 }, false);

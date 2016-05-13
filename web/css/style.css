@@ -43,6 +43,6 @@ body { background: url('../img/site42-bg.gif') repeat center top; }
 /* CAM PREVIWE */
 .cam-preview { width: 640px; height: 480px; margin: 0 auto; overflow: hidden; position: relative; }
     .cam-preview .images { position: absolute; }
-        .cam-preview .images > img { max-width: 640px; height: auto; left: 0; top: 0; position: absolute; }
-        .cam-preview .images > img.border { width: 640px;  height: 480px; }
+        .cam-preview .images > img { max-width: 640px; height: auto; left: 0; top: 0; position: absolute;}
+        .cam-preview .images > img.border { width: 640px;  height: 480px; z-index: 99; }
 /* END CAM PREVIEW */
