@@ -1,6 +1,6 @@
 <?php $app['view']->extend('layout.php'); ?>
 
-<?php $app['view']->block_start('title') ?>My title<?php $app['view']->block_end(); ?>
+<?php $app['view']->block_start('title') ?>Home<?php $app['view']->block_end(); ?>
 
 <?php $app['view']->block_start('content') ?>
 

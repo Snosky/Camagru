@@ -41,5 +41,7 @@
     <div class="wrapper content">
         <?php $app['view']->block_output('content') ?>
     </div>
+
+    <script src="<?= $app['basepath'] ?>js/webcam.js"></script>
 </body>
 </html>

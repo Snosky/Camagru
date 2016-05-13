@@ -39,3 +39,10 @@ body { background: url('../img/site42-bg.gif') repeat center top; }
 /* CONTENT */
 .content { background: #FFFFFF; margin-top: 25px; padding: 15px; border: 1px solid #2A2A2A; border-radius: 5px; }
 /* END CONTENT */
+
+/* CAM PREVIWE */
+.cam-preview { width: 640px; height: 480px; margin: 0 auto; overflow: hidden; position: relative; }
+    .cam-preview .images { position: absolute; }
+        .cam-preview .images > img { max-width: 640px; height: auto; left: 0; top: 0; position: absolute; }
+        .cam-preview .images > img.border { width: 640px;  height: 480px; }
+/* END CAM PREVIEW */

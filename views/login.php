@@ -1,5 +1,5 @@
 <?php $app['view']->extend('layout.php') ?>
-<?php $app['view']->block_start('title') ?>Login<?php $app['view']->block_end() ?>
+<?php $app['view']->block_start('title') ?>Login - Register<?php $app['view']->block_end() ?>
 
 <?php $app['view']->block_start('content') ?>
 <form action="<?= $app->url('login') ?>" method="post">
