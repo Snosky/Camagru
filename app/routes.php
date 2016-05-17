@@ -7,5 +7,6 @@ $app->get('/gallery', 'Camagru\Controller\GalleryController::indexAction')->bind
 $app->match('/upload', 'Camagru\Controller\ImageController::indexAction')->bind('upload');
 
 $app->match('/login', 'Camagru\Controller\UserController::loginAction')->bind('login');
+$app->get('/logout', 'Camagru\Controller\UserController::logoutAction')->bind('logout');
 
 $app->match('/register', 'Camagru\Controller\UserController::registerAction')->bind('register');

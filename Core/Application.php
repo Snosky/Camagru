@@ -5,6 +5,8 @@ namespace Core;
  * TODO : Flashbag and redirect
  */
 
+use Camagru\Domain\User;
+
 class Application implements \ArrayAccess
 {
     /** @var Router */
@@ -16,10 +18,17 @@ class Application implements \ArrayAccess
     /** ArrayAccess */
     private $values = array();
 
+    /** @var  User */
+    private $user = NULL;
+
     public function __construct()
     {
+        session_start();
         $this->router = new Router($this);
         $this->viewRender = new ViewRender($this);
+
+        if (isset($_SESSION['user']))
+            $this->user = $_SESSION['user'];
 
         $this->offsetSet('view', $this->viewRender);
         $this->offsetSet('basepath', str_replace('index.php', '', $_SERVER['SCRIPT_NAME']));
@@ -66,6 +75,36 @@ class Application implements \ArrayAccess
     {
         $password .= $salt;
         return hash('whirlpool', $password);
+    }
+
+    /*
+     * User Method
+     */
+    public function user()
+    {
+        return $this->user;
+    }
+
+    public function isConnected()
+    {
+        return !is_null($this->user);
+    }
+
+    public function hasRole($role)
+    {
+        return $this->isConnected() ? $this->user->getRole() == $role : FALSE;
+    }
+
+    public function login(User $user)
+    {
+        $this->user = $user;
+        $_SESSION['user'] = $this->user;
+    }
+
+    public function logout()
+    {
+        $this->user = NULL;
+        $_SESSION['user'] = NULL;
     }
 
     /*

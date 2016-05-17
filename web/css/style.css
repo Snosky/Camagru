@@ -21,6 +21,12 @@ body { background: url('../img/site42-bg.gif') repeat center top; }
         .flash-error { background: rgba(255, 74, 75, 0.5); border-color: rgba(220, 56, 57, 0.6); }
         .flash-success { background: rgba(74, 255, 75, 0.5); border-color: rgba(56, 220, 57, 0.6); }
         .flash-info { background: rgba(74, 75, 255, 0.5); border-color: rgba(56, 57, 220, 0.6);  }
+
+        .btn { padding: 5px 10px; font-family: "Quicksand", Helvetica, Arial, sans-serif; background: #2A2A2A; font-size: 0.95em; color: #FFFFFF; border: none; cursor: pointer; }
+            .btn:hover { background: #3BBEEF; }
+
+            .btn.disabled { cursor: not-allowed; opacity: .65;}
+                .btn.disabled:hover { background: #2A2A2A; }
 /* End GLOBAL */
 
 /* NAV */
@@ -41,8 +47,26 @@ body { background: url('../img/site42-bg.gif') repeat center top; }
 /* END CONTENT */
 
 /* CAM PREVIWE */
-.cam-preview { width: 640px; height: 480px; margin: 0 auto; overflow: hidden; position: relative; }
+.cam-preview { width: 640px; height: 480px; margin: 0 auto; overflow: hidden; position: relative;}
     .cam-preview .images { position: absolute; }
         .cam-preview .images > img { max-width: 640px; height: auto; left: 0; top: 0; position: absolute;}
-        .cam-preview .images > img.border { width: 640px;  height: 480px; z-index: 99; }
+        .cam-preview .images > img.border { width: 640px;  height: 480px; z-index: 10; }
+
+    .cam-preview #canvas { z-index: 11; position: absolute; top: 0; left: 0; }
+
+    .btn-group { margin: 10px; text-align: center; }
+
+    .img-list { width: 100px; }
+        .img-list img { max-width: 100px; height: auto; cursor: pointer; }
+
+    #cadres { width: 100px; float: left; }
+    #emotes { float: right; }
 /* END CAM PREVIEW */
+
+/* LOGIN / REGISTER */
+.login-page .left, .login-page .right { float: left; width: 50%; }
+    .login-page h1 { text-align: center; font-size: 1.30em; font-family: "Quicksand", Helvetica, Arial, sans-serif; font-weight: bold; padding-bottom: 20px; }
+
+    .login-page .form-group { width: 100%; }
+        .login-page .form-group label, .login-page .form-group input { display: inline-block; width: 90%; }
+        .login-page .form-group input { margin: 5px; margin-left: 0; padding: 5px; border-radius: 5px; border: 1px solid #2A2A2A; }

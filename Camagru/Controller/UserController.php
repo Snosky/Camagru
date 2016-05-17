@@ -8,6 +8,12 @@ class UserController
 {
     public function loginAction(Application $app)
     {
+        if ($app->isConnected())
+        {
+            $app['flashbag']->add('error', 'This page doesn\'t exist.');
+            return $app->redirectToLast();
+        }
+
         $user = new User();
 
         if (isset($_POST) AND !empty($_POST))
@@ -16,16 +22,17 @@ class UserController
 
             if (!isset($_POST['username']) || empty($_POST['username']) || !isset($_POST['password']) || empty($_POST['password']))
                 $form_is_valid = FALSE;
-            else if (filter_var($_POST['username'], FILTER_VALIDATE_EMAIL) && !($user = $app['dao.user']->findByEmail($_POST['email'])))
-                $form_is_valid = FALSE;
             else if (!($user = $app['dao.user']->findByUsername($_POST['username'])))
+            {
+                $user = new User();
                 $form_is_valid = FALSE;
+            }
             else if ($app->hash($_POST['password'], $user->getSalt()) != $user->getPassword())
                 $form_is_valid = FALSE;
 
             if ($form_is_valid)
             {
-                $app['user'] = $user;
+                $app->login($user);
                 $app['flashbag']->add('success', 'You\'re now connected.');
                 return $app->redirect($app->url('home'));
             }
@@ -42,6 +49,12 @@ class UserController
 
     public function registerAction(Application $app)
     {
+        if ($app->isConnected())
+        {
+            $app['flashbag']->add('error', 'This page doesn\'t exist.');
+            return $app->redirectToLast();
+        }
+
         $user = new User();
 
         if (isset($_POST) AND !empty($_POST))
@@ -100,5 +113,12 @@ class UserController
         return $app->render('login.php', array(
             'user'  => $user,
         ));
+    }
+
+    public function logoutAction(Application $app)
+    {
+        $app->logout();
+        $app['flashbag']->add('success', 'You\'ve been disconnected.');
+        return $app->redirectToLast();
     }
 }

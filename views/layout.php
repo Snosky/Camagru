@@ -16,8 +16,12 @@
                 <li><a href="<?= $app->url('upload') ?>">Upload my image</a></li>
             </ul>
             <ul class="nav nav-right">
+                <?php if (!$app->isConnected()): ?>
                 <li><a href="<?= $app->url('login') ?>">Login</a></li>
                 <li><a href="<?= $app->url('register') ?>">Register</a></li>
+                <?php else: ?>
+                <li><a href="<?= $app->url('logout') ?>">Logout</a></li>
+                <?php endif; ?>
             </ul>
         </div>
     </header>
@@ -42,6 +46,7 @@
         <?php $app['view']->block_output('content') ?>
     </div>
 
+    <script src="<?= $app['basepath'] ?>js/global.js"></script>
     <script src="<?= $app['basepath'] ?>js/webcam.js"></script>
 </body>
 </html>

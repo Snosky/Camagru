@@ -2,9 +2,12 @@
 <?php $app['view']->block_start('title') ?>Login - Register<?php $app['view']->block_end() ?>
 
 <?php $app['view']->block_start('content') ?>
+<div class="login-page">
+<div class="left">
+    <h1>Login</h1>
 <form action="<?= $app->url('login') ?>" method="post">
     <div class="form-group">
-        <label for="username">Username or E-mail :</label>
+        <label for="username">Username :</label>
         <input type="text" name="username" id="username" value="<?= $user->getUsername() ?>" required="required">
     </div>
     <div class="form-group">
@@ -17,7 +20,9 @@
         </button>
     </div>
 </form>
-
+</div>
+<div class="right">
+    <h1>Register</h1>
 <form action="<?= $app->url('register') ?>" method="post">
     <div class="form-group">
         <label for="username">Username :</label>
@@ -41,4 +46,6 @@
         </button>
     </div>
 </form>
+</div>
+</div>
 <?php $app['view']->block_end() ?>

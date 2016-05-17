@@ -4,13 +4,10 @@
 
 <?php $app['view']->block_start('content') ?>
 
-<pre>
-    <?php print_r($_SERVER); ?>
-</pre>
-
-Salut <?= $user->getUsername(); ?><br>
-
-<?php foreach ($users as $user): ?>
-    <?= $user->getUsername();?> <br>
-<?php endforeach; ?>
+    Hello
+<?php if ($app->isConnected()): ?>
+    <?php echo $app->user()->getUsername(); ?>
+<?php else: ?>
+    Visitor.
+<?php endif; ?>
 <?php $app['view']->block_end(); ?>
