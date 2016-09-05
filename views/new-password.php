@@ -3,10 +3,12 @@
 
 <?php $app['view']->block_start('content') ?>
     <form action="" method="post">
+        <?php if (!isset($reset)): ?>
         <div class="form-group">
             <label for="old_pwd">Old Password :</label>
             <input type="password" name="old_pwd" id="olw_pwd" required="required" tabindex="1">
         </div>
+        <?php endif; ?>
         <div class="form-group">
             <label for="new_pwd">Password :</label>
             <input type="password" name="new_pwd" id="new_pwd" required="required" tabindex="2">

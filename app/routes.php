@@ -14,6 +14,7 @@ $app->match('/image-{image_id}', 'Camagru\Controller\ImageController::viewAction
 $app->match('/login', 'Camagru\Controller\UserController::loginAction')->bind('login');
 $app->get('/logout', 'Camagru\Controller\UserController::logoutAction')->bind('logout');
 $app->match('/reset', 'Camagru\Controller\UserController::resetAction')->bind('reset-password');
+$app->match('/reset/{token}', 'Camagru\Controller\UserController::resetTwoAction')->bind('reset2');
 $app->get('/resend/{user_id}', 'Camagru\Controller\UserController::sendActivationAction')->bind('resend-activation');
 $app->get('/activate/{token}', 'Camagru\Controller\UserController::activateAction')->bind('activate');
 $app->match('/my-profil/password', 'Camagru\Controller\UserController::changePasswordAction')->bind('change-password');

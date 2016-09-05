@@ -165,27 +165,87 @@ class UserController
                 $form_is_valid = FALSE;
                 $app['flashbag']->add('error', 'Email doesn\'t exist.');
             }
+            else if (!$user->getActivate())
+            {
+                $form_is_valid = FALSE;
+                $app['flashbag']->add('error', 'This account is not activate.');
+            }
 
             if ($form_is_valid)
             {
-                $new_password_raw = substr(sha1(time()), 5, 15);
+                $token = md5($user->getUsername().rand());
+                $user->setToken($token);
+                $app['dao.user']->save($user);
 
                 $mail = $app->email();
                 $mail->setTo($user->getEmail());
                 $mail->setSubject('[Camagru]Password Reset');
-                $mail->setMessage('You requested a password reset. There is your new password '. $new_password_raw);
+                $mail->setMessage('You requested a password reset. There is a link to reset your password <a href=" '. $app->url('reset2', array('token' => $user->getToken())) .' ">Click here</a>');
                 $mail->send();
 
-                $password = $app->hash($new_password_raw, $user->getSalt());
-                $user->setPassword($password);
-                $app['dao.user']->save($user);
-
-                $app['flashbag']->add('success', 'An email as been send to your email address with a new password.');
+                $app['flashbag']->add('success', 'An email as been send to your email address with a link to reset your password.');
                 return $app->redirect('login');
             }
         }
         
         return $app->render('reset-account.php');
+    }
+
+    public function resetTwoAction($token, Application $app)
+    {
+        if ($app->isConnected())
+        {
+            $app['flashbag']->add('error', 'This page doesn\'t exist.');
+            return $app->redirectToLast();
+        }
+
+        $user = $app['dao.user']->findByToken($token);
+
+        if (!$user)
+        {
+            $app['flashbag']->add('error', 'This page doesn\'t exist.');
+            return $app->redirectToLast();
+        }
+
+        if (isset($_POST['send']))
+        {
+            $valid_form = TRUE;
+
+            if (!isset($_POST['new_pwd']) || empty($_POST['new_pwd']) || !isset($_POST['new_pwd2']))
+
+            {
+                $app['flashbag']->add('error', 'Please enter a new password.');
+                $valid_form = FALSE;
+            }
+            else if ($_POST['new_pwd'] != $_POST['new_pwd2'])
+            {
+                $app['flashbag']->add('error', 'New password not match.');
+                $valid_form = FALSE;
+            }
+            else if (strlen($_POST['new_pwd']) < 3)
+            {
+                $app['flashbag']->add('error', 'You\'re password should do at least 3 characters.');
+                $valid_form = FALSE;
+            }
+
+            if ($valid_form)
+            {
+                $salt = substr(sha1(time()), 3, 32);
+                $password = $app->hash($_POST['new_pwd'], $salt);
+
+                $user->setSalt($salt);
+                $user->setPassword($password);
+                $user->setToken('');
+
+                $app['dao.user']->save($user);
+                $app['flashbag']->add('success', 'You password had been updated.');
+                return $app->redirect($app->url('login'));
+            }
+        }
+
+        return $app->render('new-password.php', array(
+            'reset' => TRUE,
+        ));
     }
 
     public function changePasswordAction(Application $app)
@@ -213,6 +273,7 @@ class UserController
             }
 
             if (!isset($_POST['new_pwd']) || empty($_POST['new_pwd']) || !isset($_POST['new_pwd2']))
+
             {
                 $app['flashbag']->add('error', 'Please enter a new password.');
                 $valid_form = FALSE;
