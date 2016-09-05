@@ -84,7 +84,7 @@ function like(image_id)
     menuButton.addEventListener('click', function(){
         if (isOpen)
         {
-            menu.className = menu.className.replace('open', '');
+            menu.className = menu.className.replace(' open', '');
         }
         else
         {
