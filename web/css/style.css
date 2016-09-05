@@ -136,9 +136,9 @@ a { color: #3BBEEF; }
 /* LOGIN / REGISTER */
     .login-page h1 { text-align: center; font-size: 1.30em; font-family: "Quicksand", Helvetica, Arial, sans-serif; font-weight: bold; padding-bottom: 20px; }
 
-    .login-page .form-group { width: 100%; }
-        .login-page .form-group label, .login-page .form-group input { display: inline-block; width: 90%; }
-        .login-page .form-group input { margin: 5px; margin-left: 0; padding: 5px; border-radius: 5px; border: 1px solid #2A2A2A; }
+    .form-group { width: 100%; }
+        .form-group label, .form-group input { display: inline-block; width: 90%; }
+        .form-group input { margin: 5px; margin-left: 0; padding: 5px; border-radius: 5px; border: 1px solid #2A2A2A; }
 /* END LOGIN/ REGISTER */
 
 /* ADD CHOICE */
@@ -170,6 +170,7 @@ a { color: #3BBEEF; }
 
 /* PROFIL */
 .profil h1 { font-size: 25px; padding-bottom: 15px; border-bottom: 1px solid #2A2A2A; margin-bottom: 20px; }
+    .profil h1 p { font-size: 15px; }
     .profil h3 { font-size: 20px; padding-bottom: 8px; border-bottom: 1px solid #2A2A2A; margin-bottom: 10px; margin-top: 10px;  }
 /* END PROFIL */
 

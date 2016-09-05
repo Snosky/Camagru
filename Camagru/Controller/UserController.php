@@ -188,6 +188,63 @@ class UserController
         return $app->render('reset-account.php');
     }
 
+    public function changePasswordAction(Application $app)
+    {
+        if (!$app->isConnected())
+        {
+            $app['flashbag']->add('error', 'You have to be connected to access this page.');
+            return $app->redirect($app->url('login'));
+        }
+
+
+        if (isset($_POST['send']))
+        {
+            $valid_form = TRUE;
+
+            if (!isset($_POST['old_pwd']) && empty($_POST['old_pwd']))
+            {
+                $app['flashbag']->add('error', 'Please enter your old password.');
+                $valid_form = FALSE;
+            }
+            else if ($app->hash($_POST['old_pwd'], $app->user()->getSalt()) !== $app->user()->getPassword())
+            {
+                $app['flashbag']->add('error', 'Old password is wrong.');
+                $valid_form = FALSE;
+            }
+
+            if (!isset($_POST['new_pwd']) || empty($_POST['new_pwd']) || !isset($_POST['new_pwd2']))
+            {
+                $app['flashbag']->add('error', 'Please enter a new password.');
+                $valid_form = FALSE;
+            }
+            else if ($_POST['new_pwd'] != $_POST['new_pwd2'])
+            {
+                $app['flashbag']->add('error', 'New password not match.');
+                $valid_form = FALSE;
+            }
+            else if (strlen($_POST['new_pwd']) < 3)
+            {
+                $app['flashbag']->add('error', 'You\'re password should do at least 3 characters.');
+                $valid_form = FALSE;
+            }
+
+            if ($valid_form)
+            {
+                $salt = substr(sha1(time()), 3, 32);
+                $password = $app->hash($_POST['new_pwd'], $salt);
+
+                $app->user()->setSalt($salt);
+                $app->user()->setPassword($password);
+
+                $app['dao.user']->save($app->user());
+                $app['flashbag']->add('success', 'You password had been updated.');
+                return $app->redirect($app->url('view_user', array('user_id' => $app->user()->getId())));
+            }
+        }
+
+        return $app->render('new-password.php');
+    }
+
     public function sendActivationAction($user_id, Application $app)
     {
         $user = $app['dao.user']->find($user_id);
@@ -220,14 +277,6 @@ class UserController
         {
             $app['flashbag']->add('error', 'Error on activation.');
         }
-        return $app->redirect($app->url('login'));
-    }
-
-    public function myProfilAction(Application $app)
-    {
-        if ($app->isConnected())
-            return $this->viewProfilAction($app->user()->getId(), $app);
-        $app['flashbag']->add('error', 'You have to be connected to access this page.');
         return $app->redirect($app->url('login'));
     }
 

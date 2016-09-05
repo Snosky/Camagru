@@ -26,7 +26,7 @@
                     <li><a href="<?= $app->url('login') ?>">Login</a></li>
                     <li><a href="<?= $app->url('register') ?>">Register</a></li>
                     <?php else: ?>
-                    <li><a href="<?= $app->url('my-profil') ?>">My Profil</a></li>
+                    <li><a href="<?= $app->url('view_user', array('user_id' => $app->user()->getId())) ?>">My Profil</a></li>
                     <li><a href="<?= $app->url('logout') ?>">Logout</a></li>
                     <?php endif; ?>
                 </ul>

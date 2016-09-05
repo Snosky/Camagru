@@ -3,7 +3,12 @@
 
 <?php $app['view']->block_start('content') ?>
 <div class="profil">
-    <h1 class="text-center"><?= $user->getUsername() ?>'s profil</h1>
+    <h1 class="text-center">
+        <?= $user->getUsername() ?>'s profil
+        <?php if ($app->isConnected() && $user->getId() == $app->user()->getId()): ?>
+            <p><a href="<?= $app->url('change-password') ?>">Update my password</a></p>
+        <?php endif; ?>
+    </h1>
 
     <div class="his-images">
         <h3 class="text-center">His images</h3>

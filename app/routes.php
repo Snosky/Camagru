@@ -16,7 +16,7 @@ $app->get('/logout', 'Camagru\Controller\UserController::logoutAction')->bind('l
 $app->match('/reset', 'Camagru\Controller\UserController::resetAction')->bind('reset-password');
 $app->get('/resend/{user_id}', 'Camagru\Controller\UserController::sendActivationAction')->bind('resend-activation');
 $app->get('/activate/{token}', 'Camagru\Controller\UserController::activateAction')->bind('activate');
-$app->get('/my-profil', 'Camagru\Controller\UserController::myProfilAction')->bind('my-profil');
+$app->match('/my-profil/password', 'Camagru\Controller\UserController::changePasswordAction')->bind('change-password');
 $app->get('/user/{user_id}', 'Camagru\Controller\UserController::viewProfilAction')->bind('view_user');
 
 $app->match('/register', 'Camagru\Controller\UserController::registerAction')->bind('register');

@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-    require('./database.php');
+    require(__DIR__.'/database.php');
 
     if (!isset($DB_DSN) || !isset($DB_USER) || !isset($DB_PASSWORD) || empty($DB_DSN) || empty($DB_USER))
     {
