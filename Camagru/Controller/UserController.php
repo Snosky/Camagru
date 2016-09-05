@@ -42,7 +42,7 @@ class UserController
             }
             else
             {
-                $app['flashbag']->add('error', 'User not found.');
+                $app['flashbag']->add('error', 'User not found or combo login/password is wrong.');
             }
         }
 
