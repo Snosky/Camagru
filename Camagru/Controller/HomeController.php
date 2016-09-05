@@ -8,16 +8,26 @@ class HomeController
 {
     public function indexAction(Application $app)
     {
-        /*$user = new User();
-        $user->setUsername('Snosky');
-        $app['dao.user']->save($user);*/
+        return $this->myHomePage(1, $app);
+    }
 
-        $user = $app['dao.user']->find(1);
-        $users = $app['dao.user']->findAll();
+    public function indexPageAction($page, Application $app)
+    {
+        return $this->myHomePage($page, $app);
+    }
+
+    private function myHomePage($page, Application $app)
+    {
+        $images = $app['dao.image']->findAllPagination($page - 1);
+        $imageCount = $app['dao.image']->count();
+
+        $nbPage = ceil($imageCount / 9);
 
         return $app->render('home.php', array(
-            'user'  => $user,
-            'users' => $users
+            'images'        => $images,
+            'imageCount'    => $imageCount,
+            'actualPage'    => $page,
+            'nbPage'        => $nbPage
         ));
     }
 }

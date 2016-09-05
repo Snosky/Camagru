@@ -1,10 +1,6 @@
 <?php
 namespace Core;
 
-/*
- * TODO : Flashbag and redirect
- */
-
 use Camagru\Domain\User;
 
 class Application implements \ArrayAccess
@@ -29,6 +25,11 @@ class Application implements \ArrayAccess
 
         if (isset($_SESSION['user']))
             $this->user = $_SESSION['user'];
+        else
+        {
+            $this->user = new User();
+            $this->user()->setId(0);
+        }
 
         $this->offsetSet('view', $this->viewRender);
         $this->offsetSet('basepath', str_replace('index.php', '', $_SERVER['SCRIPT_NAME']));
@@ -54,9 +55,14 @@ class Application implements \ArrayAccess
      */
     public function redirect($url)
     {
-        header('Location:'.$url);
-        die();
-        return NULL;
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')
+            $this->render(NULL);
+        else
+        {
+            header('Location:' . $url);
+            die();
+            return NULL;
+        }
     }
 
     /**
@@ -64,17 +70,27 @@ class Application implements \ArrayAccess
      */
     public function redirectToLast()
     {
-        $ref = $_SERVER['HTTP_REFERER'];
-        if (strstr($ref, $_SERVER['HTTP_HOST']))
-            $this->redirect($ref);
-        else
-            $this->redirect($this->url('home'));
+        if (isset($_SERVER['HTTP_REFERER']))
+        {
+            $ref = $_SERVER['HTTP_REFERER'];
+            if (strstr($ref, $_SERVER['HTTP_HOST']))
+                $this->redirect($ref);
+        }
+        $this->redirect($this->url('home'));
     }
 
     public function hash($password, $salt)
     {
         $password .= $salt;
         return hash('whirlpool', $password);
+    }
+
+    /*
+     * Email
+     */
+    public function email()
+    {
+        return new EMail();
     }
 
     /*
@@ -87,7 +103,7 @@ class Application implements \ArrayAccess
 
     public function isConnected()
     {
-        return !is_null($this->user);
+        return $this->user->getId();
     }
 
     public function hasRole($role)
@@ -138,6 +154,14 @@ class Application implements \ArrayAccess
      */
     public function render($file, $data = array())
     {
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')
+        {
+            header('Content-Type: application/json');
+            $vars['flashbags'] = $_SESSION['flashbags'];
+            $_SESSION['flashbags'] = NULL;
+            die(json_encode($vars));
+        }
+
         return $this->viewRender->render($file, $data);
     }
 
@@ -169,4 +193,9 @@ class Application implements \ArrayAccess
     /*
      * End Array Access
      */
+
+    public function page_not_found()
+    {
+        return $this->render('404.php');
+    }
 }

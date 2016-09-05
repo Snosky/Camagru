@@ -31,4 +31,9 @@ class Flashbag
         return isset($_SESSION['flashbags'][$type]) ? !empty($_SESSION['flashbags'][$type]) : FALSE;
     }
 
+    public function clear()
+    {
+        $_SESSION['flashbags'] = NULL;
+    }
+
 }

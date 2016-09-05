@@ -35,6 +35,15 @@ class UserDAO extends DAO
         return NULL;
     }
 
+    public function findByToken($token)
+    {
+        $sql = 'SELECT * FROM t_user WHERE usr_token=?';
+        $row = $this->getDb()->fetchAssoc($sql, array($token));
+
+        if ($row)
+            return $this->buildDomainObject($row);
+        return NULL;
+    }
 
     public function findAll()
     {
@@ -56,6 +65,8 @@ class UserDAO extends DAO
             'usr_password'  => $user->getPassword(),
             'usr_salt'      => $user->getSalt(),
             'usr_role'      => $user->getRole(),
+            'usr_confirm'   => $user->getActivate(),
+            'usr_token'     => $user->getToken(),
         );
 
         if ($user->getId())
@@ -85,6 +96,8 @@ class UserDAO extends DAO
         $user->setPassword($row['usr_password']);
         $user->setSalt($row['usr_salt']);
         $user->setRole($row['usr_role']);
+        $user->setActivate($row['usr_confirm']);
+        $user->setToken($row['usr_token']);
         return $user;
     }
 }

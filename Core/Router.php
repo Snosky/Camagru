@@ -48,7 +48,8 @@ class Router
         foreach ($routes as $route)
             if ($route->match($this->url))
                 return $route->call();
-        throw new RouterException('Route not found');
+        //throw new RouterException('Route not found');
+        return $this->app->page_not_found();
     }
 
     public function generate($name, $params = array())
@@ -57,7 +58,7 @@ class Router
             /** @var Route $route */
             foreach ($routes as $route)
                 if ($route->getName() == $name) {
-                    return WEBROOT . $route->generate($params);
+                    return $_SERVER['REQUEST_SCHEME']. '://' .$_SERVER['HTTP_HOST']. '/' . $route->generate($params);
                 }
         }
         throw new RouterException(sprintf('Route %s doesn\'t exist', $name));

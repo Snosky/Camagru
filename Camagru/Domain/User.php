@@ -15,6 +15,10 @@ class User
     private $salt;
     /** @var  string */
     private $role;
+    /** @var bool */
+    private $activate;
+    /** @var string */
+    private $token;
 
     /**
      * @return int
@@ -110,5 +114,25 @@ class User
     public function setRole($role)
     {
         $this->role = $role;
+    }
+
+    public function setActivate($activate)
+    {
+        $this->activate = $activate;
+    }
+
+    public function getActivate()
+    {
+        return $this->activate;
+    }
+
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
+
+    public function getToken()
+    {
+        return $this->token;
     }
 }

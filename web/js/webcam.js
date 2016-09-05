@@ -1,6 +1,9 @@
+var is_valid = 0;
+
 window.addEventListener("DOMContentLoaded", function() {
 
     var img64 = null;
+    var useVideo = true;
 
 	// Grab elements, create settings, etc.
 	var canvas = document.getElementById("canvas"),
@@ -32,73 +35,51 @@ window.addEventListener("DOMContentLoaded", function() {
 
     // Take a snap
 	document.getElementById("snap").addEventListener("click", function() {
-    	context.drawImage(video, 0, 0, 640, 480);
+        context.drawImage(video, 0, 0, 640, 480);
 
-    	var cont = document.getElementById("camImagesList");
-    	var images = cont.getElementsByTagName('img');
+    	img64webcam = canvas.toDataURL('image/jpeg');
 
-        for (var i = images.length - 1; i >= 0; i--)
-        {
-            var img = new Image(images[i].clientWidth, images[i].clientHeight);
-            img.setAttribute('crossOrigin', 'anonymous');
-            img.src = images[i].currentSrc;
-            var left = images[i].style.left;
-            var top = images[i].style.top;
-            context.drawImage(images[i], left.replace('px', ''), top.replace('px', ''), images[i].clientWidth, images[i].clientHeight);
-        }
-        img64 = canvas.toDataURL('image/jpeg');
-        document.getElementById("save").className = document.getElementById("save").className.replace('disabled', '');
+        //Put on the form
+        document.getElementById('formWebcamImage').value = img64webcam;
+
+        is_valid++;
+
+        if (is_valid == 2)
+            enableElem('save');
     });
 
     // Reset the snap
-    document.getElementById("retry").addEventListener("click", function(){
+    document.getElementById("reset").addEventListener("click", function(){
         context.clearRect(0, 0, 640, 480);
-        document.getElementById("save").className = document.getElementById("save").className + " disabled";
         img64 = null;
+        is_valid = 0;
+        disableElem('save');
+        document.getElementById('preview').removeChild(document.getElementsByClassName('border')[0]);
     });
 
-    // Save the image
-    document.getElementById("save").addEventListener("click", function(){
-        if (img64 != null)
-        {
-            console.log('Save');
-        }
-    });
 
-    //Change the border
-    var cadres = document.getElementById("cadres").getElementsByTagName("img");
+    // Frame selection
+    var cadres = document.getElementById("layer-list").getElementsByTagName("img");
     for (var i = 0; i < cadres.length; i++)
     {
         cadres[i].addEventListener("click", function(e){
             var border = this.cloneNode(true);
             border.className = "border";
 
-            var imagesList = document.getElementById("camImagesList");
+            var imagesList = document.getElementById("preview");
             var del = imagesList.getElementsByClassName("border");
             for (var k = 0; k < del.length; k++)
             {
                 imagesList.removeChild(del[k]);
+                is_valid--;
             }
 
-            document.getElementById("camImagesList").appendChild(border);
+            preview.appendChild(border);
+            is_valid++;
+            document.getElementById('frame-form').value = border.src;
 
-        });
-        /*cadres[i].addEventListener("click", function(){
-            img.className = "border";
-            var node = document.getElementById("camImagesList");
-            node.appendChild(img[0]);
-        });*/
-    }
-
-    //Add emote
-    var emotes = document.getElementById("emotes").getElementsByTagName("img");
-    for (var i = 0; i < emotes.length; i++)
-    {
-        emotes[i].addEventListener('click', function(e){
-            var emote = this.cloneNode(true);
-            emote.className = "emote";
-
-           document.getElementById("camImagesList").appendChild(emote);
+            if (is_valid == 2)
+                enableElem('save');
         });
     }
-}, false);
+});

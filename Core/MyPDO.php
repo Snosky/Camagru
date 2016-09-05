@@ -10,18 +10,21 @@ class MyPDO
 
     public function __construct($DB_DSN, $DB_USER, $DB_PASSWORD)
     {
-        // TODO : Construct
         try {
             $this->pdo = new \PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
+            $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         }
         catch (\PDOException $e)
         {
             echo 'Error PDO: '.$e->getMessage();
+            die();
         }
     }
 
     private function select($sql, $values = array(), $fetchType, $multiple)
     {
+        $data = NULL;
+
         $this->bind_index = 0;
 
         $nbValues = preg_match_all('#\?#', $sql);
@@ -32,13 +35,22 @@ class MyPDO
             return NULL;
         }
 
-        $req = $this->pdo->prepare($sql);
-        $req->setFetchMode($fetchType);
-        $this->bindValues($req, $values);
-        $req->execute();
-        if ($multiple)
-            return $req->fetchAll();
-        return $req->fetch();
+        try {
+            $req = $this->pdo->prepare($sql);
+            $req->setFetchMode($fetchType);
+            $this->bindValues($req, $values);
+            $req->execute();
+            if ($multiple)
+                $data = $req->fetchAll();
+            else
+                $data = $req->fetch();
+        }
+        catch (\PDOException $e)
+        {
+            echo 'Error PDO: '.$e->getMessage();
+            die();
+        }
+        return $data;
     }
 
     public function fetchAssoc($sql, $values = array())
