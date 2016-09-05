@@ -1,6 +1,8 @@
 <?php
 namespace Core;
 
+use Core\Exception\MailException;
+
 class EMail
 {
     private $from;
@@ -13,7 +15,7 @@ class EMail
         if (filter_var($email, FILTER_VALIDATE_EMAIL))
             $this->from = $email;
         else
-            throw new \MailException(sprintf("%s is not an valid email adress", $email));
+            throw new MailException(sprintf("%s is not an valid email adress", $email));
     }
 
     public function setTo($email)
@@ -24,14 +26,14 @@ class EMail
                 if (filter_var($v, FILTER_VALIDATE_EMAIL))
                     $this->to[] = $v;
                 else
-                    throw new \MailException(sprintf("%s is not an valid email adress", $v));
+                    throw new MailException(sprintf("%s is not an valid email adress", $v));
         }
         else
         {
             if (filter_var($email, FILTER_VALIDATE_EMAIL))
                 $this->to[] = $email;
             else
-                throw new \MailException(sprintf("%s is not an valid email adress", $email));
+                throw new MailException(sprintf("%s is not an valid email adress", $email));
         }
     }
 
