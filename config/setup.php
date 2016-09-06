@@ -7,8 +7,17 @@
         die('Error : database.php is not valid.');
     }
 
+    $tmp = explode(':', $DB_DSN);
+    $tmp = explode(';', $tmp[1]);
+    $dsn = 'mysql:';
+    foreach ($tmp as $r)
+    {
+        if (strstr($r, 'dbname=') === FALSE)
+            $dsn .= $r;
+    }
+
     try {
-        $pdo = new \PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
+        $pdo = new \PDO($dsn, $DB_USER, $DB_PASSWORD);
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
     catch (\PDOException $e)
@@ -131,7 +140,7 @@
                     }
                     catch (\PDOException $e)
                     {
-                        echo 'Error sql : '. $e.PHP_EOL;
+                        echo 'Error sql : '. $e->getMessage().PHP_EOL;
                         $error = TRUE;
                     }
                 }
