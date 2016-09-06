@@ -199,6 +199,7 @@ class UserController
             return $app->redirectToLast();
         }
 
+        /** @var User $user */
         $user = $app['dao.user']->findByToken($token);
 
         if (!$user)
@@ -212,7 +213,6 @@ class UserController
             $valid_form = TRUE;
 
             if (!isset($_POST['new_pwd']) || empty($_POST['new_pwd']) || !isset($_POST['new_pwd2']))
-
             {
                 $app['flashbag']->add('error', 'Please enter a new password.');
                 $valid_form = FALSE;
@@ -227,7 +227,12 @@ class UserController
                 $app['flashbag']->add('error', 'You\'re password should do at least 3 characters.');
                 $valid_form = FALSE;
             }
-
+            else if ($app->hash($_POST['new_pwd'], $user->getSalt()) === $user->getPassword())
+            {
+                $app['flashbag']->add('error', 'Your new password can\'t be the same as before.');
+                $valid_form = FALSE;
+            }
+            
             if ($valid_form)
             {
                 $salt = substr(sha1(time()), 3, 32);
