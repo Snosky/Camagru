@@ -38,14 +38,19 @@
     echo 'Step 1 : Done'.PHP_EOL;
 
     echo 'Step 2 : Database installation.'.PHP_EOL;
+
+    $schema = explode(';', $DB_DSN);
+    $schema = explode('=', $schema[0]);
+    $schema = $schema[1];
+
     $sql = "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
             SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
             SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
-            DROP SCHEMA IF EXISTS `snosky_camagru` ;
-            CREATE SCHEMA IF NOT EXISTS `snosky_camagru` DEFAULT CHARACTER SET utf8 ;
-            USE `snosky_camagru` ;
-            DROP TABLE IF EXISTS `snosky_camagru`.`t_user` ;
-            CREATE TABLE IF NOT EXISTS `snosky_camagru`.`t_user` (
+            DROP SCHEMA IF EXISTS `$schema` ;
+            CREATE SCHEMA IF NOT EXISTS `$schema` DEFAULT CHARACTER SET utf8 ;
+            USE `$schema` ;
+            DROP TABLE IF EXISTS `$schema`.`t_user` ;
+            CREATE TABLE IF NOT EXISTS `$schema`.`t_user` (
               `usr_id` INT NOT NULL AUTO_INCREMENT,
               `usr_username` VARCHAR(32) NULL,
               `usr_email` VARCHAR(255) NULL,
@@ -56,8 +61,8 @@
               `usr_token` VARCHAR(32) NULL,
               PRIMARY KEY (`usr_id`))
             ENGINE = InnoDB;
-            DROP TABLE IF EXISTS `snosky_camagru`.`t_image` ;
-            CREATE TABLE IF NOT EXISTS `snosky_camagru`.`t_image` (
+            DROP TABLE IF EXISTS `$schema`.`t_image` ;
+            CREATE TABLE IF NOT EXISTS `$schema`.`t_image` (
               `img_id` INT NOT NULL AUTO_INCREMENT,
               `usr_id` INT NOT NULL,
               `img_created` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
@@ -65,12 +70,12 @@
               INDEX `fk_t_image_t_user_idx` (`usr_id` ASC),
               CONSTRAINT `fk_t_image_t_user`
                 FOREIGN KEY (`usr_id`)
-                REFERENCES `snosky_camagru`.`t_user` (`usr_id`)
+                REFERENCES `$schema`.`t_user` (`usr_id`)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION)
             ENGINE = InnoDB;
-            DROP TABLE IF EXISTS `snosky_camagru`.`t_image_like` ;
-            CREATE TABLE IF NOT EXISTS `snosky_camagru`.`t_image_like` (
+            DROP TABLE IF EXISTS `$schema`.`t_image_like` ;
+            CREATE TABLE IF NOT EXISTS `$schema`.`t_image_like` (
               `img_id` INT NOT NULL,
               `usr_id` INT NOT NULL,
               INDEX `fk_t_image_like_t_image1_idx` (`img_id` ASC),
@@ -78,17 +83,17 @@
               PRIMARY KEY (`img_id`, `usr_id`),
               CONSTRAINT `fk_t_image_like_t_image1`
                 FOREIGN KEY (`img_id`)
-                REFERENCES `snosky_camagru`.`t_image` (`img_id`)
+                REFERENCES `$schema`.`t_image` (`img_id`)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION,
               CONSTRAINT `fk_t_image_like_t_user1`
                 FOREIGN KEY (`usr_id`)
-                REFERENCES `snosky_camagru`.`t_user` (`usr_id`)
+                REFERENCES `$schema`.`t_user` (`usr_id`)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION)
             ENGINE = InnoDB;
-            DROP TABLE IF EXISTS `snosky_camagru`.`t_image_com` ;
-            CREATE TABLE IF NOT EXISTS `snosky_camagru`.`t_image_com` (
+            DROP TABLE IF EXISTS `$schema`.`t_image_com` ;
+            CREATE TABLE IF NOT EXISTS `$schema`.`t_image_com` (
               `com_id` INT NOT NULL AUTO_INCREMENT,
               `com_content` TEXT NULL,
               `img_id` INT NOT NULL,
@@ -99,12 +104,12 @@
               INDEX `fk_t_image_com_t_user1_idx` (`usr_id` ASC),
               CONSTRAINT `fk_t_image_com_t_image1`
                 FOREIGN KEY (`img_id`)
-                REFERENCES `snosky_camagru`.`t_image` (`img_id`)
+                REFERENCES `$schema`.`t_image` (`img_id`)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION,
               CONSTRAINT `fk_t_image_com_t_user1`
                 FOREIGN KEY (`usr_id`)
-                REFERENCES `snosky_camagru`.`t_user` (`usr_id`)
+                REFERENCES `$schema`.`t_user` (`usr_id`)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION)
             ENGINE = InnoDB;

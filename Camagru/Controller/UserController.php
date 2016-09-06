@@ -232,7 +232,7 @@ class UserController
                 $app['flashbag']->add('error', 'Your new password can\'t be the same as before.');
                 $valid_form = FALSE;
             }
-            
+
             if ($valid_form)
             {
                 $salt = substr(sha1(time()), 3, 32);
