@@ -37,7 +37,9 @@ class ImageController
 
             if (isset($_POST['frame']) || !empty($_POST['frame']))
             {
-                $src = str_replace($_SERVER['HTTP_ORIGIN'], ROOT.'web', $_POST['frame']);
+                $src = explode('/', $_POST['frame']);
+                $src = end($src);
+                $src = ROOT.'web'.DS.'img'.DS.'frame'.DS.$src;
                 if (!file_exists($src))
                 {
                     $app['flashbag']->add('error', 'Please select a valid frame.');
@@ -145,7 +147,9 @@ class ImageController
 
             if (isset($_POST['frame']) || !empty($_POST['frame']))
             {
-                $src = str_replace($_SERVER['HTTP_ORIGIN'], ROOT.'web', $_POST['frame']);
+                $src = explode('/', $_POST['frame']);
+                $src = end($src);
+                $src = ROOT.'web'.DS.'img'.DS.'frame'.DS.$src;
                 if (!file_exists($src))
                 {
                     $app['flashbag']->add('error', 'Please select a valid frame.');
@@ -247,7 +251,7 @@ class ImageController
     public function deleteAction($image_id, Application $app)
     {
         if (!$app->isConnected())
-            $app->redirectToLast();
+            $app->redirect($app->url('home'));
 
         $image = $app['dao.image']->find($image_id);
 
