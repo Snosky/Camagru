@@ -63,50 +63,63 @@ class ImageController
 
             if (!$form_errors)
             {
-                $upload = imagecreatefromstring(file_get_contents($_FILES['fileToUpload']['tmp_name']));
-                list($width, $height) = getimagesize($_FILES['fileToUpload']['tmp_name']);
-                $frame_size = getimagesize($_POST['frame']);
+                $strok = TRUE;
 
-                $frame = imagecreatefrompng($_POST['frame']);
-                $newframe = imagecreatetruecolor($width, $height);
-
-                imagealphablending($newframe, false);
-                imagesavealpha($newframe, true );
-
-                imagecolortransparent($newframe);
-
-                $error = imagecopyresampled($newframe, $frame, 0, 0, 0, 0, $width, $height, $frame_size[0], $frame_size[1]);
-
-                if ($error)
-                    $error = imagecopyresampled($upload, $newframe, 0, 0, 0, 0, $width, $height, $width, $height);
-
-                imagedestroy($frame);
-                imagedestroy($newframe);
-
-                if ($error)
+                try {
+                    $upload = imagecreatefromstring(file_get_contents($_FILES['fileToUpload']['tmp_name']));
+                }
+                catch (\Exception $e)
                 {
-                    $image = new Image();
-                    $image->setUser($app->user());
-                    $app['dao.image']->save($image);
+                    $app['flashbag']->add('error', 'Please upload an image and nothing else !');
+                    $strok = FALSE;
                 }
 
-                if (!$error || !$image->getId())
+                if ($strok)
                 {
-                    $app['flashbag']->add('error', 'Error on image saving. Please retry.');
-                    imagedestroy($upload);
-                }
-                else
-                {
-                    if (imagepng($upload, $image->getRealPath()) === FALSE)
+                    list($width, $height) = getimagesize($_FILES['fileToUpload']['tmp_name']);
+                    $frame_size = getimagesize($_POST['frame']);
+
+                    $frame = imagecreatefrompng($_POST['frame']);
+                    $newframe = imagecreatetruecolor($width, $height);
+
+                    imagealphablending($newframe, false);
+                    imagesavealpha($newframe, true);
+
+                    imagecolortransparent($newframe);
+
+                    $error = imagecopyresampled($newframe, $frame, 0, 0, 0, 0, $width, $height, $frame_size[0], $frame_size[1]);
+
+                    if ($error)
+                        $error = imagecopyresampled($upload, $newframe, 0, 0, 0, 0, $width, $height, $width, $height);
+
+                    imagedestroy($frame);
+                    imagedestroy($newframe);
+
+                    if ($error)
+                    {
+                        $image = new Image();
+                        $image->setUser($app->user());
+                        $app['dao.image']->save($image);
+                    }
+
+                    if (!$error || !$image->getId())
                     {
                         $app['flashbag']->add('error', 'Error on image saving. Please retry.');
-                        $app['dao.image']->delete($image->getId());
                         imagedestroy($upload);
-                        return $app->redirect($app->url('home'));
                     }
-                    $app['flashbag']->add('success', 'Your image is now online ! You can see it <a href="'.WEBROOT.'image-'.$image->getId().'">here</a>');
-                    imagedestroy($upload);
-                    return $app->redirect($app->url('view_image', array('image_id' => $image->getId())));
+                    else
+                    {
+                        if (imagepng($upload, $image->getRealPath()) === FALSE)
+                        {
+                            $app['flashbag']->add('error', 'Error on image saving. Please retry.');
+                            $app['dao.image']->delete($image->getId());
+                            imagedestroy($upload);
+                            return $app->redirect($app->url('home'));
+                        }
+                        $app['flashbag']->add('success', 'Your image is now online ! You can see it <a href="' . WEBROOT . 'image-' . $image->getId() . '">here</a>');
+                        imagedestroy($upload);
+                        return $app->redirect($app->url('view_image', array('image_id' => $image->getId())));
+                    }
                 }
             }
         }
