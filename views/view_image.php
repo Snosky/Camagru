@@ -35,7 +35,7 @@
             $v = 'odd';
             foreach ($comments as $comment): ?>
             <p class="<?= $v ?>" id="comment-<?= $comment->getId() ?>">
-                <span><?= $comment->getUser()->getUsername() ?> >></span> <?= $comment->getContent() ?>
+                <span><?= $comment->getUser()->getUsername() ?> >></span> <?= htmlspecialchars($comment->getContent()) ?>
             </p>
         <?php
             $v = ($v == 'odd') ? 'event' : 'odd';
